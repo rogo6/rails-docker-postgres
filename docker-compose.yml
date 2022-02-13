@@ -1,0 +1,39 @@
+version: '2.2'
+services:
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && gem install bundler -v 2.2.20 && bundle install && yarn && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - bundle:/bundle
+      - ${APP_VOLUME}
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:13-alpine
+    command: ["postgres", "-c", "fsync=false", "-c", "full_page_writes=off"]
+    volumes:
+      - ./dockerdata/postgresql/data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  sidekiq:
+    build: .
+    command: bash -c "gem install bundler -v 2.2.20 && bundle install && yarn && bundle exec sidekiq -q default -q mailers"
+    depends_on:
+      - db
+    volumes:
+      - bundle:/bundle
+      - ${APP_VOLUME}
+    env_file:
+      - .env
+volumes:
+  bundle:

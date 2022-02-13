@@ -1,0 +1,85 @@
+require: rubocop-rails
+
+Rails:
+  Enabled: true
+
+AllCops:
+  TargetRubyVersion: 3.0.0
+  Include:
+    - app/**/*.rb
+  Exclude:
+    - db/schema.rb
+    - app/views/**/**
+    - app/assets/**/**
+    - bin/**
+  NewCops: enable
+  SuggestExtensions: false
+
+#################
+#### METRICS ####
+#################
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/ClassLength:
+  Max: 250
+
+Metrics/BlockLength:
+  CountComments: false  # count full line comments?
+  Max: 25
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+
+Metrics/ParameterLists:
+  Max: 5
+  CountKeywordArgs: true
+
+Metrics/PerceivedComplexity:
+  Max: 7
+
+Metrics/AbcSize:
+  Max: 25
+
+################
+#### STYLE #####
+################
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/SingleLineBlockParams:
+  Methods:
+    - reduce:
+        - acc
+        - elem
+    - inject:
+        - acc
+        - elem
+
+################
+#### LAYOUT ####
+################
+
+Layout/LineLength:
+  Max: 140
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: space
+
+Layout/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: true
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: space
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Documentation:
+  Enabled: false
